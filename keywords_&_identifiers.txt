@@ -1,0 +1,16 @@
+%{
+#include <stdio.h>
+%}
+%%
+if|else|while|int|switch|for|char|printf|yywrap|yylex {printf("keyword");}
+[a-z]([a-z]|[0-9])* {printf("identifier");}
+.* {printf("invalid");}
+%%
+int main()
+{
+yylex();
+return 0;
+}
+int yywrap()
+{
+}

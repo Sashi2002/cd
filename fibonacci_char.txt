@@ -1,0 +1,78 @@
+ 
+// Fibonacci Sequence 
+import java.util.HashMap;
+import java.util.Vector;
+
+class GFG 
+{
+
+	// Function to check if the frequencies
+	// are in Fibonacci series
+	static String isFibonacci(String s) 
+	{
+
+		// map to store the
+		// frequencies of character
+		HashMap<Character, 
+				Integer> m = new HashMap<>();
+		for (int i = 0; i < s.length(); i++)
+			m.put(s.charAt(i), 
+			m.get(s.charAt(i)) == null ? 1 : 
+			m.get(s.charAt(i)) + 1);
+
+		// Vector to store first n
+		// fibonacci numbers
+		Vector<Integer> v = new Vector<>();
+
+		// Get the size of the map
+		int n = m.size();
+
+		// a and b are first and second terms of
+		// fibonacci series
+		int a = 1, b = 1;
+
+		int c;
+		v.add(a);
+		v.add(b);
+
+		// vector v contains elements of 
+		// fibonacci series
+		for (int i = 0; i < n - 2; i++) 
+		{
+			v.add(a + b);
+			c = a + b;
+			a = b;
+			b = c;
+		}
+
+		int flag = 1;
+		int i = 0;
+
+		// Compare vector elements with values in Map
+		for (HashMap.Entry<Character,
+						Integer> entry : m.entrySet()) 
+		{
+			if (entry.getValue() != v.elementAt(i)) 
+			{
+				flag = 1;
+				break;
+			}
+
+			i++;
+		}
+		
+		if (flag == 1)
+			return "YES";
+		else
+			return "NO";
+	}
+
+	// Driver Code
+	public static void main(String[] args) 
+	{
+		String s = "abeebbbccccc";
+		System.out.println(isFibonacci(s));
+	}
+}
+
+

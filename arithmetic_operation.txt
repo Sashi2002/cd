@@ -1,0 +1,120 @@
+public class SyntaxTreeTraversal {
+    public static class TreeNode {
+        String value;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(String value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // Function to build the parse tree from the input expression
+    public static TreeNode buildParseTree(String expression) {
+        // Tokenize the expression
+        String[] tokens = expression.split("(?<=[-+*/()])|(?=[-+*/()])");
+        return buildParseTree(tokens, 0, tokens.length - 1);
+    }
+
+    // Recursive function to build the parse tree
+    private static TreeNode buildParseTree(String[] tokens, int start, int end) {
+        if (start == end) {
+            return new TreeNode(tokens[start]);
+        }
+
+        // Find the index of the operator with the lowest precedence
+        int lowestPrecedenceIndex = -1;
+        int parenCount = 0;
+        for (int i = end; i >= start; i--) {
+            if (tokens[i].equals(")")) {
+                parenCount++;
+            } else if (tokens[i].equals("(")) {
+                parenCount--;
+            } else if (parenCount == 0 && (tokens[i].equals("+") || tokens[i].equals("-")) &&
+                    (lowestPrecedenceIndex == -1 || tokens[lowestPrecedenceIndex].equals("*") || tokens[lowestPrecedenceIndex].equals("/"))) {
+                lowestPrecedenceIndex = i;
+            } else if (parenCount == 0 && (tokens[i].equals("*") || tokens[i].equals("/")) &&
+                    (lowestPrecedenceIndex == -1)) {
+                lowestPrecedenceIndex = i;
+            }
+        }
+
+        // If no operator is found, assume the expression is surrounded by parentheses
+        if (lowestPrecedenceIndex == -1) {
+            return buildParseTree(tokens, start + 1, end - 1);
+        }
+
+        // Create a new node for the operator
+        TreeNode root = new TreeNode(tokens[lowestPrecedenceIndex]);
+
+        // Recursively build the left and right subtrees
+        root.left = buildParseTree(tokens, start, lowestPrecedenceIndex - 1);
+        root.right = buildParseTree(tokens, lowestPrecedenceIndex + 1, end);
+
+        return root;
+    }
+
+    // Function to print the parse tree
+    public static void printParseTree(TreeNode root, int level) {
+        if (root == null) {
+            return;
+        }
+
+        // Print the node's value with indentation based on the level
+        for (int i = 0; i < level; i++) {
+            System.out.print("\t");
+        }
+        System.out.println(root.value);
+
+        // Recursively print the left and right subtrees
+        printParseTree(root.left, level + 1);
+        printParseTree(root.right, level + 1);
+    }
+
+    public static int traverseAndCalculate(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        if (node.left == null && node.right == null) {
+            return Integer.parseInt(node.value);
+        }
+
+        int leftValue = traverseAndCalculate(node.left);
+        int rightValue = traverseAndCalculate(node.right);
+
+        switch (node.value) {
+            case "+":
+                return leftValue + rightValue;
+            case "-":
+                return leftValue - rightValue;
+            case "*":
+                return leftValue * rightValue;
+            case "/":
+                if (rightValue == 0) {
+                    throw new ArithmeticException("Division by zero");
+                }
+                return leftValue / rightValue;
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + node.value);
+        }
+    }
+
+    public static void main(String[] args) {
+        // Input expression
+        String expression = "3+(5*2)";
+
+        // Build the parse tree
+        TreeNode root = buildParseTree(expression);
+
+        // Perform traversal and calculation
+        int result = traverseAndCalculate(root);
+        System.out.println("Result: " + result);
+
+        // Print the parse tree
+        System.out.println("Parse Tree:");
+        printParseTree(root, 0);
+    }
+}

@@ -1,0 +1,14 @@
+%{
+%}
+%%
+[0-9]* {printf("This is a number");}
+[a-z]* {printf("This is in lowercase");}
+[A-Z]* {printf("This is in uppercase");}
+.* {printf("unspecified rule");}
+%%
+int yywrap(){}
+void main()
+{
+printf("Enter a string");
+yylex();
+}
