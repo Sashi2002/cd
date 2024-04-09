@@ -1,0 +1,25 @@
+import java.util.*;
+
+public class test {
+    public static void main(String[] args) {
+        // Example input: while (x > 5) { y = y + x; }
+        String condition = "x > 5";
+        String action = "y = y + x";
+
+        // Generate code for the while loop
+        String generatedCode = generateWhileCode(condition, action);
+        System.out.println("Generated code:");
+        System.out.println(generatedCode);
+    }
+
+    public static String generateWhileCode(String condition, String action) {
+        StringBuilder codeBuilder = new StringBuilder();
+        // Add the while loop
+        codeBuilder.append("while (").append(condition).append(") {\n");
+        // Add the action inside the while loop
+        codeBuilder.append("\t").append(action).append(";\n");
+        // Close the while loop
+        codeBuilder.append("}");
+        return codeBuilder.toString();
+    }
+}
