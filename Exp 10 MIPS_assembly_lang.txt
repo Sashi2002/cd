@@ -1,0 +1,20 @@
+.data
+num1: .word 10
+num2: .word 5
+
+.text
+main:
+    # load num1 into $t0
+    lw $t0, num1
+    # load num2 into $t1
+    lw $t1, num2
+    # add num1 and num2
+    add $t2, $t0, $t1
+    # move result to print register
+    move $a0, $t2
+    # print result
+    li $v0, 1        # syscall code for print_int
+    syscall
+    # exit program
+    li $v0, 10       # syscall code for exit
+    syscall
